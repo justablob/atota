@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////
 //                                                     //
-//   asymmetric one-time token-based authentication    //
+//   asymmetric token-based one-time authentication    //
 //                                                     //
 /////////////////////////////////////////////////////////
 

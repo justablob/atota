@@ -2,7 +2,7 @@
 
 ## atota
 
-atota (asymmetric one-time token-based authentication) is a module that allows clients to authenticate to a server using a one-time token based on asymmetric cryptography.
+atota (asymmetric token-based one-time authentication) is a module that allows clients to authenticate to a server using a one-time token based on asymmetric cryptography.
 
 ### Installation
 
