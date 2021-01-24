@@ -1,6 +1,6 @@
 module.exports = {
   transform: {
-    "^.+\\.(t|j)sx?$": ["@swc/jest"],
+    "^.+\\.(t|j)sx?$": ["ts-jest"],
   },
   testEnvironment: "node"
 };

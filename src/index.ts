@@ -7,6 +7,8 @@
 import Advanceable from "advanceable";
 import crypto, { KeyObject } from "@justablob/commoncrypto";
 
+export * from "./encoding";
+
 const magic_byte = 0x9c;
 const randomness_size = 16;
 

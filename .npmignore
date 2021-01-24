@@ -4,7 +4,6 @@
 /test
 /jest.config.js
 /tsconfig.json
-/.swcrc
 
 /yarn.lock
 /yarn-error.log
