@@ -7,8 +7,6 @@
 import Advanceable from "advanceable";
 import crypto, { KeyObject } from "@justablob/commoncrypto";
 
-export * from "./encoding";
-
 const magic_byte = 0x9c;
 const randomness_size = 16;
 
@@ -30,7 +28,7 @@ function _encode_period (period: number): Buffer {
 }
 
 export function generate_keypair () {
-  return crypto.light_signature_generate_keypair();
+  return crypto.signature_generate_keypair();
 }
 
 export function encode_keypair (publicKey?: KeyObject, privateKey?: KeyObject): [Buffer, Buffer] {
@@ -38,10 +36,10 @@ export function encode_keypair (publicKey?: KeyObject, privateKey?: KeyObject): 
   let privateKeyEncoded;
 
   if (publicKey) {
-    publicKeyEncoded = crypto.light_signature_export_key(publicKey);
+    publicKeyEncoded = crypto.signature_export_key(publicKey);
   }
   if (privateKey) {
-    privateKeyEncoded = crypto.light_signature_export_key(privateKey);
+    privateKeyEncoded = crypto.signature_export_key(privateKey);
   }
 
   return [publicKeyEncoded, privateKeyEncoded];
@@ -52,10 +50,10 @@ export function decode_keypair (publicKey?: Buffer, privateKey?: Buffer): [KeyOb
   let privateKeyDecoded;
 
   if (publicKey) {
-    publicKeyDecoded = crypto.light_signature_import_key("public", publicKey);
+    publicKeyDecoded = crypto.signature_import_key("public", publicKey);
   }
   if (privateKey) {
-    privateKeyDecoded = crypto.light_signature_import_key("private", privateKey);
+    privateKeyDecoded = crypto.signature_import_key("private", privateKey);
   }
 
   return [publicKeyDecoded, privateKeyDecoded];
@@ -67,9 +65,9 @@ function _join_inner_data (
   randomness: Buffer,
   period: number,
 ) {
-  let writer = new Advanceable(10 + randomness_size + crypto._param.LIGHT_HASH_ALGORITHM_OUTPUT_LENGTH, true);
+  let writer = new Advanceable(10 + randomness_size + crypto._param.HASH_ALGORITHM_OUTPUT_LENGTH, true);
 
-  let ad_hash = crypto.light_hash(additional_data);
+  let ad_hash = crypto.hash(additional_data);
 
   writer.writeUInt16BE(interval);
   writer.writeUInt16BE(additional_data.length);
@@ -86,7 +84,7 @@ function _join_outer_data (
   period: number,
   signature: Buffer,
 ) {
-  let writer = new Advanceable(9 + randomness_size + crypto._param.LIGHT_SIGNATURE_ALGORITHM_SIGNATURE_LENGTH, true);
+  let writer = new Advanceable(9 + randomness_size + crypto._param.SIGNATURE_ALGORITHM_SIGNATURE_LENGTH, true);
 
   writer.writeByte(magic_byte);
   writer.writeUInt16BE(interval);
@@ -110,7 +108,7 @@ function _read_outer_data (data: Buffer): [
   let interval = reader.readUInt16BE();
   let randomness = reader.read(randomness_size);
   let period = _decode_period(reader.read(6));
-  let signature = reader.read(crypto._param.LIGHT_SIGNATURE_ALGORITHM_SIGNATURE_LENGTH);
+  let signature = reader.read(crypto._param.SIGNATURE_ALGORITHM_SIGNATURE_LENGTH);
 
   return [
     interval,
@@ -135,7 +133,7 @@ export function authenticate (
     period,
   );
 
-  let signature = crypto.light_signature_sign(private_key, inner_data);
+  let signature = crypto.signature_sign(private_key, inner_data);
 
   let output_data = _join_outer_data(
     interval,
@@ -180,5 +178,5 @@ export function verify (
     period,
   );
 
-  return crypto.light_signature_verify(public_key, inner_data, signature);
+  return crypto.signature_verify(public_key, inner_data, signature);
 }
